@@ -6,3 +6,33 @@ export const getCourses = (keyword?: string, page = 0, size = 10) =>
         params: { keyword, page, size },
     });
 };
+import type {
+    CourseFormValues
+} from '../types/course';
+
+export const createCourse = (
+    data: CourseFormValues
+) => {
+    return axiosClient.post(
+        '/api/courses',
+        data
+    );
+};
+
+export const updateCourse = (
+    id: number,
+    data: CourseFormValues
+) => {
+    return axiosClient.put(
+        `/api/courses/${id}`,
+        data
+    );
+};
+
+export const deleteCourse = (
+    id: number
+) => {
+    return axiosClient.delete(
+        `/api/courses/${id}`
+    );
+};

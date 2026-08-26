@@ -6,22 +6,22 @@ interface CourseListProps {
     state: LoadState;
     errorMessage: string;
     onRetry: () => void;
+    onEdit: (course: Course) => void;
+    onDelete: (course: Course) => void;
 }
 
 export default function CourseList({
                                        courses,
                                        state,
                                        errorMessage,
-                                       onRetry
+                                       onRetry,
+                                       onEdit,
+                                       onDelete,
                                    }: CourseListProps) {
 
     // LOADING
     if (state === 'loading') {
-        return (
-            <p>
-                Dang tai danh sach mon hoc...
-            </p>
-        );
+        return <p>Đang tải danh sách môn học...</p>;
     }
 
     // ERROR
@@ -31,7 +31,7 @@ export default function CourseList({
                 <p>{errorMessage}</p>
 
                 <button onClick={onRetry}>
-                    Thu lai
+                    Thử lại
                 </button>
             </div>
         );
@@ -39,11 +39,7 @@ export default function CourseList({
 
     // EMPTY
     if (state === 'empty') {
-        return (
-            <p>
-                Khong tim thay mon hoc nao phu hop.
-            </p>
-        );
+        return <p>Không tìm thấy môn học nào phù hợp.</p>;
     }
 
     // SUCCESS
@@ -51,59 +47,66 @@ export default function CourseList({
         <table
             style={{
                 width: '100%',
-                borderCollapse: 'collapse'
+                borderCollapse: 'collapse',
             }}
         >
             <thead>
             <tr
                 style={{
                     textAlign: 'left',
-                    borderBottom: '2px solid #333'
+                    borderBottom: '2px solid #333',
                 }}
             >
-                <th>Ten mon hoc</th>
-                <th>So tin chi</th>
-                <th>So cho con lai</th>
+                <th>Thao tác</th>
+                <th>Tên môn học</th>
+                <th>Số tín chỉ</th>
+                <th>Số chỗ còn lại</th>
             </tr>
             </thead>
 
             <tbody>
-
             {courses.map((course) => (
-
                 <tr
                     key={course.id}
                     style={{
-                        borderBottom:
-                            '1px solid #eee'
+                        borderBottom: '1px solid #eee',
                     }}
                 >
-
+                    {/* THAO TÁC */}
                     <td>
-                        {course.tenMonHoc}
+                        <button
+                            onClick={() => onEdit(course)}
+                        >
+                            Sửa
+                        </button>
+
+                        <button
+                            onClick={() => onDelete(course)}
+                            style={{ marginLeft: 8 }}
+                        >
+                            Xóa
+                        </button>
                     </td>
 
-                    <td>
-                        {course.soTinChi}
-                    </td>
+                    {/* TÊN MÔN HỌC */}
+                    <td>{course.tenMonHoc}</td>
 
+                    {/* SỐ TÍN CHỈ */}
+                    <td>{course.soTinChi}</td>
+
+                    {/* SỐ CHỖ CÒN LẠI */}
                     <td
                         style={{
                             color:
                                 course.soChoConLai === 0
                                     ? '#b91c1c'
-                                    : 'inherit'
+                                    : 'inherit',
                         }}
                     >
-                        {course.soChoConLai}
-                        {' / '}
-                        {course.soChoToiDa}
+                        {course.soChoConLai} / {course.soChoToiDa}
                     </td>
-
                 </tr>
-
             ))}
-
             </tbody>
         </table>
     );
