@@ -6,8 +6,10 @@ interface CourseListProps {
     state: LoadState;
     errorMessage: string;
     onRetry: () => void;
-    onEdit: (course: Course) => void;
-    onDelete: (course: Course) => void;
+
+    // Chỉ có AdminCoursesPage mới truyền 2 hàm này
+    onEdit?: (course: Course) => void;
+    onDelete?: (course: Course) => void;
 }
 
 export default function CourseList({
@@ -19,12 +21,16 @@ export default function CourseList({
                                        onDelete,
                                    }: CourseListProps) {
 
+    // =========================
     // LOADING
+    // =========================
     if (state === 'loading') {
         return <p>Đang tải danh sách môn học...</p>;
     }
 
+    // =========================
     // ERROR
+    // =========================
     if (state === 'error') {
         return (
             <div style={{ color: '#b91c1c' }}>
@@ -37,12 +43,16 @@ export default function CourseList({
         );
     }
 
+    // =========================
     // EMPTY
+    // =========================
     if (state === 'empty') {
         return <p>Không tìm thấy môn học nào phù hợp.</p>;
     }
 
+    // =========================
     // SUCCESS
+    // =========================
     return (
         <table
             style={{
@@ -57,7 +67,11 @@ export default function CourseList({
                     borderBottom: '2px solid #333',
                 }}
             >
-                <th>Thao tác</th>
+                {/* Chỉ hiển thị cột thao tác khi có onEdit hoặc onDelete */}
+                {(onEdit || onDelete) && (
+                    <th>Thao tác</th>
+                )}
+
                 <th>Tên môn học</th>
                 <th>Số tín chỉ</th>
                 <th>Số chỗ còn lại</th>
@@ -72,29 +86,50 @@ export default function CourseList({
                         borderBottom: '1px solid #eee',
                     }}
                 >
-                    {/* THAO TÁC */}
-                    <td>
-                        <button
-                            onClick={() => onEdit(course)}
-                        >
-                            Sửa
-                        </button>
 
-                        <button
-                            onClick={() => onDelete(course)}
-                            style={{ marginLeft: 8 }}
-                        >
-                            Xóa
-                        </button>
+                    {/* =========================
+                        THAO TÁC
+                    ========================= */}
+                    {(onEdit || onDelete) && (
+                        <td>
+                            {onEdit && (
+                                <button
+                                    onClick={() => onEdit(course)}
+                                >
+                                    Sửa
+                                </button>
+                            )}
+
+                            {onDelete && (
+                                <button
+                                    onClick={() => onDelete(course)}
+                                    style={{
+                                        marginLeft: 8,
+                                    }}
+                                >
+                                    Xóa
+                                </button>
+                            )}
+                        </td>
+                    )}
+
+                    {/* =========================
+                        TÊN MÔN HỌC
+                    ========================= */}
+                    <td>
+                        {course.tenMonHoc}
                     </td>
 
-                    {/* TÊN MÔN HỌC */}
-                    <td>{course.tenMonHoc}</td>
+                    {/* =========================
+                        SỐ TÍN CHỈ
+                    ========================= */}
+                    <td>
+                        {course.soTinChi}
+                    </td>
 
-                    {/* SỐ TÍN CHỈ */}
-                    <td>{course.soTinChi}</td>
-
-                    {/* SỐ CHỖ CÒN LẠI */}
+                    {/* =========================
+                        SỐ CHỖ CÒN LẠI
+                    ========================= */}
                     <td
                         style={{
                             color:
@@ -105,6 +140,7 @@ export default function CourseList({
                     >
                         {course.soChoConLai} / {course.soChoToiDa}
                     </td>
+
                 </tr>
             ))}
             </tbody>

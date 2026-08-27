@@ -1,12 +1,7 @@
 import axios from 'axios';
 
-// Gán tạm token mới vào localStorage khi khởi chạy
-localStorage.setItem(
-    'crs_token',
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4NzcyNjI4NywiZXhwIjoxNzg3ODEyNjg3fQ.iR7WHp7lBlHppxy5h5H5oozCcHlVYkk_NUmu7uyZmdg'
-);
-
-const axiosClient = axios.create({
+const axiosClient = axios.create(
+    {
     baseURL: import.meta.env.VITE_API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
@@ -14,11 +9,26 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config) => {
-    const token = localStorage.getItem('crs_token');
+    const token = localStorage.getItem('crs_token',);
+
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
 });
-
+axiosClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (axios.isAxiosError(error) && error.response?.status === 401)
+        {
+            localStorage.removeItem('crs_token');
+            localStorage.removeItem('crs_user');
+            if (window.location.pathname !== '/login') {
+                window.location.href = '/login';
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 export default axiosClient;
