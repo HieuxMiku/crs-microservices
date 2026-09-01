@@ -1,4 +1,6 @@
-package vn.edu.crs.authservice.exeption;
-
-public class InvalidCredentialsException {
+package vn.edu.crs.authservice.exception;
+public class InvalidCredentialsException extends RuntimeException {
+    public InvalidCredentialsException(String message) {
+        super(message);
+    }
 }
