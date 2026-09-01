@@ -10,16 +10,16 @@ import type {
     LoginResponse
 } from '../types/auth';
 
-interface AuthUser {
-    username: string;
-    role: 'ADMIN' | 'STUDENT';
-}
-
 interface AuthContextValue {
     user: AuthUser | null;
     login: (data: LoginResponse) => void;
     logout: () => void;
     isAuthenticated: boolean;
+}
+interface AuthUser {
+    id: number;
+    username: string;
+    role: 'ADMIN' | 'STUDENT';
 }
 
 const AuthContext =
@@ -57,6 +57,7 @@ export function AuthProvider({
         );
 
         const authUser: AuthUser = {
+            id: data.userId,
             username: data.username,
             role: data.role
         };

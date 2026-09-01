@@ -46,9 +46,15 @@ export default function Navbar() {
 
             {isAuthenticated &&
                 user?.role === 'STUDENT' && (
-                    <Link to="/register-course">
-                        Dang ky hoc phan
-                    </Link>
+                    <>
+                        <Link to="/register-course">
+                            Đăng ký học phần
+                        </Link>
+
+                        <Link to="/my-registrations">
+                            Môn học đã đăng ký
+                        </Link>
+                    </>
                 )}
 
             <div style={{ marginLeft: 'auto' }}>

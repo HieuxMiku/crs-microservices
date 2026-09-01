@@ -36,3 +36,10 @@ export const deleteCourse = (
         `/api/courses/${id}`
     );
 };
+export const getCourseById = (
+    id: number
+) => {
+    return axiosClient.get<Course>(
+        `/api/courses/${id}`
+    );
+};

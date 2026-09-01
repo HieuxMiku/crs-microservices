@@ -25,6 +25,8 @@ import Navbar
     from './components/Navbar';
 import RegisterCoursePage from "./pages/RegisterCoursesPage.tsx";
 
+import MyRegistrationsPage from './pages/MyRegistrationsPage.tsx';
+
 function App() {
 
     return (
@@ -74,6 +76,16 @@ function App() {
                                 requiredRole="STUDENT"
                             >
                                 <RegisterCoursePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/my-registrations"
+                        element={
+                            <ProtectedRoute
+                                requiredRole="STUDENT"
+                            >
+                                <MyRegistrationsPage />
                             </ProtectedRoute>
                         }
                     />

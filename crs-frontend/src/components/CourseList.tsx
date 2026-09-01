@@ -10,6 +10,9 @@ interface CourseListProps {
     // Chỉ có AdminCoursesPage mới truyền 2 hàm này
     onEdit?: (course: Course) => void;
     onDelete?: (course: Course) => void;
+    onRegister?: (course: Course) => void;
+
+    registeringId?: number | null;
 }
 
 export default function CourseList({
@@ -19,7 +22,17 @@ export default function CourseList({
                                        onRetry,
                                        onEdit,
                                        onDelete,
+                                       onRegister,
+                                       registeringId,
                                    }: CourseListProps) {
+
+    // =========================
+    // HIỂN THỊ CỘT THAO TÁC
+    // =========================
+    const showActions =
+        !!onEdit ||
+        !!onDelete ||
+        !!onRegister;
 
     // =========================
     // LOADING
@@ -67,8 +80,8 @@ export default function CourseList({
                     borderBottom: '2px solid #333',
                 }}
             >
-                {/* Chỉ hiển thị cột thao tác khi có onEdit hoặc onDelete */}
-                {(onEdit || onDelete) && (
+                {/* Cột thao tác */}
+                {showActions && (
                     <th>Thao tác</th>
                 )}
 
@@ -90,26 +103,57 @@ export default function CourseList({
                     {/* =========================
                         THAO TÁC
                     ========================= */}
-                    {(onEdit || onDelete) && (
+                    {showActions && (
                         <td>
+
+                            {/* NÚT SỬA */}
                             {onEdit && (
                                 <button
-                                    onClick={() => onEdit(course)}
+                                    onClick={() =>
+                                        onEdit(course)
+                                    }
                                 >
                                     Sửa
                                 </button>
                             )}
 
+                            {/* NÚT XÓA */}
                             {onDelete && (
                                 <button
-                                    onClick={() => onDelete(course)}
+                                    onClick={() =>
+                                        onDelete(course)
+                                    }
                                     style={{
                                         marginLeft: 8,
+                                        color: '#b91c1c',
                                     }}
                                 >
                                     Xóa
                                 </button>
                             )}
+
+                            {/* NÚT ĐĂNG KÝ */}
+                            {onRegister && (
+                                <button
+                                    onClick={() =>
+                                        onRegister(course)
+                                    }
+                                    disabled={
+                                        course.soChoConLai === 0 ||
+                                        registeringId === course.id
+                                    }
+                                    style={{
+                                        marginLeft: 8,
+                                    }}
+                                >
+                                    {registeringId === course.id
+                                        ? 'Đang đăng ký...'
+                                        : course.soChoConLai === 0
+                                            ? 'Hết chỗ'
+                                            : 'Đăng ký'}
+                                </button>
+                            )}
+
                         </td>
                     )}
 
